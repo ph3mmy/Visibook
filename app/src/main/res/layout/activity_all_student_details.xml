@@ -1,0 +1,19 @@
+<!--
+<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pager2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jcedar.visibook.lautech.ui.AllStudentDetailsActivity"
+    android:background="@color/sim_grey"/>-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:id="@+id/details"
+        android:layout_height="match_parent"
+        android:background="@drawable/grey_frame_on_white"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
+</LinearLayout>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/fullName_group"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/invoice_item_height_medium"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/fullNameLabel"
+        style="@style/Theme.Gardener.Preference.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_size"
+        android:text="Full Name" />
+
+    <TextView
+        android:id="@+id/fullName"
+        style="@style/Theme.Gardener.Preference.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_25"
+        android:text="role" />
+
+        </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/userName_group"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/invoice_item_height_medium"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/usernameLabel"
+        style="@style/Theme.Gardener.Preference.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_size"
+        android:text="Username" />
+
+    <TextView
+        android:id="@+id/username"
+        style="@style/Theme.Gardener.Preference.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_25"
+        android:text="role" />
+        </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/organization_group"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/invoice_item_height_medium"
+        android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/organizationLabel"
+        style="@style/Theme.Gardener.Preference.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_size"
+        android:text="Organization" />
+
+
+    <TextView
+        android:id="@+id/organization"
+        style="@style/Theme.Gardener.Preference.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/barSize_12"
+        android:text="role" />
+
+        </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,203 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.jcedar.visibook.lautech">
+
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- Sync -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+
+    <!-- Sync Service -->
+
+    <permission
+        android:name="com.jcedar.visibook.lautech.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.jcedar.visibook.lautech.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+
+    <!--android:name=".app.VisiBook"-->
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_user"
+        android:installLocation="auto"
+        android:label="@string/app_name"
+        android:screenOrientation="portrait"
+        android:theme="@style/Theme.Gardener" >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <provider
+            android:name=".provider.DataProvider"
+            android:authorities="com.jcedar.visibook.lautech.provider"
+            android:exported="false"
+            android:syncable="true" />
+        <provider
+            android:name=".provider.SuggestionProvider"
+            android:authorities="com.jcedar.visibook.lautech.provider.SuggestionProvider" />
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider924951214224981"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true"/>
+
+        <activity
+            android:name=".ui.DashboardActivity"
+            android:exported="true"
+            android:label="@string/app_name" >
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".ui.SearchActivity" />
+        </activity>
+
+        <activity
+            android:name=".ui.NewDashBoardActivity"
+            android:exported="true"
+            android:label="@string/app_name" />
+
+        <activity
+            android:name=".ui.SearchActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.DashboardActivity" />
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name=".ui.MainActivity"
+            android:label="@string/title_activity_main" />
+        <activity
+            android:name=".ui.GoogleSignIn"
+            android:label="Visibook" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id" />
+
+        <activity
+            android:name=".ui.PicViewActivity"
+            android:label="@string/title_activity_pic_view"
+            android:parentActivityName=".ui.DashboardActivity" >
+
+            <!--
+                <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jcedar.visibook.lautech.ui.Dashboard" />
+            -->
+        </activity>
+        <activity
+            android:name=".ui.StudentDetailsActivity"
+            android:label="@string/title_activity_student_details" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.item/vnd.com.jcedar.visibook.lautech.provider.students_chapter" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.AllStudentDetailsActivity"
+            android:label="@string/title_activity_all_student_details" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.item/vnd.com.jcedar.visibook.lautech.provider.students" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.ProfileActivity"
+            android:label="@string/title_activity_profile" />
+
+        <receiver
+            android:name=".gcm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.jcedar.visibook.lautech" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".gcm.GcmIntentServices" />
+
+        <activity
+            android:name=".ui.Details"
+            android:label="@string/title_activity_details"
+            android:parentActivityName=".ui.DashboardActivity"
+            android:theme="@style/Theme.Gardener" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.DashboardActivity" />
+        </activity>
+        <activity
+            android:name=".ui.Settings"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/Theme.Gardener" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.DashboardActivity" />
+        </activity>
+        <!--
+            <activity
+            android:name=".ui.Preference"
+            android:label="@string/title_activity_preference"
+            android:theme="@style/Theme.Gardener"/>
+        -->
+        <activity android:name=".ui.AddUpdateActivity" />
+        <activity
+            android:name=".ui.UpdateActivity"
+            android:label="@string/title_activity_update"
+            android:parentActivityName=".ui.AddUpdateActivity"
+            android:theme="@style/Theme.Gardener" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jcedar.visibook.lautech.ui.AddUpdateActivity" />
+        </activity>
+        <activity
+            android:name=".ui.AddActivity"
+            android:label="@string/title_activity_add"
+            android:parentActivityName=".ui.AddUpdateActivity"
+            android:theme="@style/Theme.Gardener" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jcedar.visibook.lautech.ui.AddUpdateActivity" />
+        </activity>
+    </application>
+
+</manifest>

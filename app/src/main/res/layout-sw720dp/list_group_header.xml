@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_item_schedule_header_textview"
+    android:layout_width="match_parent"
+    android:layout_height="32dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:gravity="center_vertical"
+    android:textColor="@color/theme_accent_1"
+    android:textAllCaps="true"
+    android:textStyle="bold"
+    android:textSize="@dimen/text_size_large"
+    android:clickable="true"
+    android:focusable="false"
+    android:background="@drawable/accent_bottom_border" />

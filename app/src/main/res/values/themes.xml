@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Gardener" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="colorPrimary">@color/theme_primary</item>-->
+        <item name="colorPrimary">@color/theme_primary</item>
+        <item name="colorPrimaryDark">@color/theme_primary_dark</item>
+        <item name="colorAccent">@color/theme_primary</item>
+        <item name="android:dialogTheme">@style/DialogTheme</item>
+    <item name="android:typeface">sans</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/activated_background
+        </item>
+
+    </style>
+
+    <style name="Theme.Gardener.Button" parent="Theme.Gardener">
+        <item name="android:background">@drawable/btn_rect_default</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+   <!-- <style name="Theme.Gardener.Button" parent="Theme.Gardener">
+        <item name="android:background">@drawable/btn_rect_default</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>-->
+
+   <style name="Theme.Gardener.FAB" parent="Theme.Gardener">
+        <item name="android:layout_width">@dimen/btn_fab_size</item>
+        <item name="android:layout_height">@dimen/btn_fab_size</item>
+        <item name="android:layout_gravity">bottom|right</item>
+        <item name="android:layout_marginBottom">@dimen/btn_fab_margins</item>
+        <item name="android:layout_marginRight">@dimen/btn_fab_margins</item>
+        <item name="android:background">@drawable/btn_fab_default</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
+        <!--<item name="android:src">@drawable/ic_note_add_white_24dp</item>-->
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="Theme.Gardener.FABMobile" parent="Theme.Gardener">
+        <item name="android:layout_width">@dimen/btn_fab_size</item>
+        <item name="android:layout_height">@dimen/btn_fab_size</item>
+        <item name="android:layout_gravity">bottom|right</item>
+        <item name="android:layout_marginBottom">@dimen/btn_fab_margins</item>
+        <item name="android:layout_marginRight">@dimen/btn_fab_margins</item>
+        <item name="android:background">@drawable/btn_fab_default</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
+        <!--<item name="android:src">@drawable/ic_note_add_white_24dp</item>-->
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="Theme.Gardener.FAB.New" parent="Theme.Gardener.FAB">
+        <!-- <item name="fab:fab_colorNormal">@color/theme_accent_2</item>
+         <item name="fab:fab_colorPressed">@color/fab_color_pressed</item>
+         <item name="fab:fab_colorRipple">@color/theme_accent_2</item>-->
+    </style>
+
+    <style name="Theme.Gardener.FAB.NewMobile" parent="Theme.Gardener.FABMobile">
+        <!-- <item name="fab:fab_colorNormal">@color/theme_accent_2</item>
+         <item name="fab:fab_colorPressed">@color/fab_color_pressed</item>
+         <item name="fab:fab_colorRipple">@color/theme_accent_2</item>-->
+    </style>
+
+    <!--<style name="Theme.Gardener.FAB.Mini" parent="Theme.Gardener.FAB.New">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>-->
+
+    <style name="Theme.Gardener.FAB.Text" parent="Theme.Gardener">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
+    <style name="Theme.Gardener.List.Nav" parent="Theme.Gardener">
+        <item name="android:activatedBackgroundIndicator">@drawable/list_item_navdrawer_background
+        </item>
+    </style>
+
+    <style name="Theme.Gardener.Preference.Label" parent="Theme.Gardener">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="Theme.Gardener.Preference.Value" parent="Theme.Gardener">
+        <item name="android:textColor">@color/body_text_1</item>
+        <item name="android:textSize">@dimen/text_size_xlarge</item>
+    </style>
+
+    <style name="Theme.Gardener.ListItem.Title" parent="Theme.Gardener">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/body_text_1</item>
+
+    </style>
+</resources>

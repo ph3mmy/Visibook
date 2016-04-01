@@ -1,0 +1,98 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/session_photo_scrim"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/chosen_account_view"
+        android:layout_width="match_parent"
+        android:background="@drawable/grey_frame_on_white"
+        android:backgroundTint="@color/session_photo_scrim"
+        android:layout_height="240dp">
+
+      <!--  <ImageView
+            android:id="@+id/profile_cover_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/power1"
+            android:tint="@color/session_photo_scrim" /> -->
+
+        <!--<ImageView-->
+
+
+        <RelativeLayout
+            android:id="@+id/chosen_account_content_view"
+            android:layout_width="match_parent"
+            android:backgroundTint="@color/session_photo_scrim"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/keyline_1"
+            android:paddingRight="@dimen/keyline_1"
+            android:paddingTop="@dimen/keyline_1"
+            android:layout_gravity="center">
+
+          <!-- <com.jcedar.visibook.lautech.ui.view.BezelImageView
+                android:id="@+id/profile_image"
+                android:layout_width="@dimen/navdrawer_profile_image_size"
+                android:layout_height="@dimen/navdrawer_profile_image_size"
+                android:scaleType="centerCrop"
+                android:src="@drawable/person_image_empty"
+                app:maskDrawable="@drawable/circle_mask" />-->
+            <com.jcedar.visibook.lautech.ui.view.BezelImageView
+                android:id="@+id/profile_image1"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/power1"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="40dp"
+                app:maskDrawable="@drawable/circle_mask"/>
+            <TextView
+                android:id="@+id/profile_role_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingBottom="16dp"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/body_text_1"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true" />
+
+            <TextView
+                android:id="@+id/profile_name_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/profile_role_text"
+                android:layout_marginTop="40dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text=""
+                android:gravity="center_horizontal"
+                android:textColor="@color/body_text_1"
+                android:textSize="@dimen/text_size_large" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <ListView
+        android:id="@+id/drawer_listview"
+        style="@style/Theme.Gardener.List.Nav"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:listSelector="@drawable/navdrawer_background_selector"
+        android:textStyle="bold" />
+</LinearLayout>

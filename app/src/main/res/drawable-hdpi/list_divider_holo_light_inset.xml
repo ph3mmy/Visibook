@@ -1,0 +1,4 @@
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/holo_image"
+    android:insetLeft="16dp"
+    android:insetRight="16dp" />

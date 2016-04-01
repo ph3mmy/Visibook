@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:title="Preferences"
+    >
+
+
+    <PreferenceCategory
+        android:title="Notifications"
+        android:shadowColor="@color/theme_primary">
+
+        <SwitchPreference android:key="notification"
+            android:title="Notification"
+            android:switchTextOff="OFF"
+            android:switchTextOn="ON"
+            android:summary="Enable/Disable notification"
+            android:defaultValue="true"
+            android:shadowColor="@color/theme_primary"
+            android:buttonTint="@color/theme_primary">
+
+        </SwitchPreference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory  android:title="Alerts">
+
+        <CheckBoxPreference
+            android:key="sounds"
+            android:title="Sounds"
+            android:summary="Tick to set this option"
+            android:defaultValue="true"
+            android:id="@+id/sound_cbp"
+            android:dependency="notification"
+            />
+        <CheckBoxPreference
+            android:key="vibration"
+            android:title="Vibration"
+            android:summary="Tick to set this option"
+            android:defaultValue="true"
+            android:id="@+id/vibration_cbp"
+            android:dependency="notification"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory  android:title="About">
+
+        <EditTextPreference
+            android:key="version"
+            android:title="@string/version"
+            android:summary="1.0"
+            android:enabled="false"
+            android:selectable="false"
+            android:persistent="false"
+            android:shouldDisableView="false"/>
+        <EditTextPreference
+            android:key="developer"
+            android:title="@string/developer"
+            android:summary="Afolayan Oluwaseyi"
+            android:enabled="false"
+            android:selectable="false"
+            android:persistent="false"
+            android:shouldDisableView="false"/>
+        <EditTextPreference
+            android:key="designer"
+            android:title="@string/designer"
+            android:summary="Bamisaye Oluwafemi"
+            android:enabled="false"
+            android:selectable="false"
+            android:persistent="false"
+            android:shouldDisableView="false"/>
+
+    </PreferenceCategory>
+
+
+
+
+</PreferenceScreen>

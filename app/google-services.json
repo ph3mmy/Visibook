@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_id": "visilautech",
+    "project_number": "940366209071",
+    "name": "VisiLautech"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940366209071:android:d3cb1e05c719f3d0",
+        "client_id": "android:com.jcedar.visibook.lautech",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.jcedar.visibook.lautech",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940366209071-ht4b9eei1bmhhu444ece32gg09i0dn0g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jcedar.visibook.lautech",
+            "certificate_hash": "55F71EB0109700D21888276332C28B0A10F7BAD5"
+          }
+        },
+        {
+          "client_id": "940366209071-8akbe44mjv7o0pcdqrpbgt8jmghn7uoc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

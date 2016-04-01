@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="@string/app_name"
+    android:hint="@string/str_search_hint"
+    android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
+    android:searchSuggestAuthority="com.jcedar.visibook.lautech.provider.SuggestionProvider"
+    android:searchSuggestThreshold="1"
+    android:searchSuggestSelection=" ?" >
+
+    <!--<actionkey
+        android:keycode="KEYCODE_ENTER"
+        android:queryActionMsg="search"
+        android:suggestActionMsg="search" />-->
+
+</searchable>

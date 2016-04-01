@@ -1,0 +1,23 @@
+<selector xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_checked="true">
+        <ripple android:color="@color/fab_color_2_muted" tools:targetApi="lollipop">
+            <item>
+                <shape>
+                    <solid android:color="@color/fab_color_2" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+
+    <item>
+        <ripple android:color="@color/fab_color_1_muted" tools:targetApi="lollipop">
+            <item>
+                <shape>
+                    <solid android:color="@color/fab_color_1" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+
+</selector>

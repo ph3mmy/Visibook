@@ -1,0 +1,33 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <include layout="@layout/general_toolbar"></include>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/tool_bar_drop_shadow"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:padding="@dimen/multipane_half_padding"
+        android:id="@+id/large_screen">
+
+        <FrameLayout android:id="@+id/fragment_container_master"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/grey_frame_on_white"
+            android:layout_margin="@dimen/multipane_half_padding" />
+
+        <FrameLayout android:id="@+id/fragment_container_detail"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:layout_margin="@dimen/multipane_half_padding"
+            />
+    </LinearLayout>
+</LinearLayout>

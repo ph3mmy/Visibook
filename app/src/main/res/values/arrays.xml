@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="batch_selection_mode">
+        <item>Aggregate</item>
+        <item>Approved</item>
+        <item>Unapproved</item>
+        <item>Reset</item>
+    </string-array>
+</resources>
