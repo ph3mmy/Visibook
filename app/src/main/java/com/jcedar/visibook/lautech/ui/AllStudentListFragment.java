@@ -52,6 +52,7 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
 
     RecyclerView recyclerView;
     RecyclerCursorAdapterAll resultsCursorAdapter;
+    View rootView;
 
     public static AllStudentListFragment newInstance(int position) {
         AllStudentListFragment fragment = new AllStudentListFragment();
@@ -73,15 +74,6 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
         super.onActivityCreated(savedInstanceState);
         // Initialize loader
         getLoaderManager().initLoader(1, null, this);
-
-
-                Loader loader1 = getLoaderManager().getLoader(1);
-                if (loader1 != null && !loader1.isReset()) {
-                    getLoaderManager().restartLoader(1, null, this);
-                } else {
-                    getLoaderManager().initLoader(1, null, this);
-                }
-
     }
 
     @Override
@@ -96,26 +88,39 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
 
         sSectionAdapter = new SimpleSectionedListAdapter(getActivity(),
                 R.layout.list_group_header, mAdapter);
-    context = getActivity().getClass().getSimpleName();
+        context = getActivity().getClass().getSimpleName();
 
         // setListAdapter(mAdapter);
         /*setListAdapter(sSectionAdapter);*/
+        setRetainInstance(true);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        ViewGroup rootView;
+        /*super.onCreateView(inflater, container, savedInstanceState);*/
 
-        if( !context.equalsIgnoreCase("AllStudentDetailsActivity")) {
-             rootView =
-                    (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
-        } else {
-            rootView =
-                    (ViewGroup) inflater.inflate(R.layout.fragment_home1, container, false);
+        if( rootView != null ){
+            if(  rootView.getParent() != null ){
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((ViewGroup) rootView.getParent()).removeView(rootView);
+                    }
+                });
+
+            }
+            return rootView;
         }
+        rootView = inflater.inflate(R.layout.fragment_home, container, false);
+
         recyclerView = (RecyclerView) rootView.findViewById( R.id.recyclerview );
         resultsCursorAdapter = new RecyclerCursorAdapterAll( getActivity() );
 
@@ -126,6 +131,12 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
         recyclerView.setAdapter(resultsCursorAdapter);
         tvError = (TextView) rootView.findViewById(R.id.tvErrorMag);
 
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().setTitle("Lautech");
+            }
+        });
         resultsCursorAdapter.setOnItemClickListener(new RecyclerCursorAdapterAll.OnItemClickListener() {
             @Override
             public void onItemClicked(Cursor data) {
@@ -145,11 +156,6 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
 
     }
 
-    interface Listener {
-        void onAllSelected(long courseId);
-        void onFragmentDetached(Fragment fragment);
-        void onFragmentAttached(Fragment fragment);
-    }
 
 
     @Override
@@ -160,6 +166,12 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    interface Listener {
+        void onAllSelected(long courseId);
+        void onFragmentDetached(Fragment fragment);
+        void onFragmentAttached(Fragment fragment);
     }
 
     @Override
@@ -175,8 +187,6 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
         }
         activity.getContentResolver().registerContentObserver(
                 DataContract.Students.CONTENT_URI, true, mObserver);
-
-
 
     }
 
@@ -203,7 +213,7 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri uri = DataContract.Students.CONTENT_URI;
-        CursorLoader cursorLoader =  new CursorLoader(
+        return new CursorLoader(
                     getActivity(),
                     uri,
                     DataContract.Students.PROJECTION_ALL,
@@ -211,7 +221,6 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
                     null,           // arguments
                     DataContract.Students.NAME + " ASC"
             );
-        return cursorLoader;
     }
 
 
@@ -219,6 +228,7 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
         resultsCursorAdapter.swapCursor(data);
+
     }
 
     @Override

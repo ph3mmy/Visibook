@@ -62,6 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
             + DataContract.Students.DOB_NUMBER + " VARCHAR ,"
             + DataContract.Students.IS_ALUMNI + " VARCHAR ,"
             + DataContract.Students.UPDATE_INFO + " VARCHAR ,"
+            + DataContract.Students.IMAGE + " TEXT, "
             + DataContract.Students.UPDATED + " LONG DEFAULT 0, "
             + "UNIQUE (" + DataContract.Students.NAME + ","
             + DataContract.Students.EMAIL
@@ -83,6 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
             + DataContract.StudentsChapter.IS_ALUMNI + " VARCHAR , "
             + DataContract.StudentsChapter.UPDATE_INFO + " VARCHAR,"
             + DataContract.StudentsChapter.DOB_NUMBER + " VARCHAR, "
+            + DataContract.Students.IMAGE + " TEXT, "
             + DataContract.StudentsChapter.UPDATED + " LONG DEFAULT 0, "
             + "UNIQUE (" + DataContract.StudentsChapter.NAME + ","
             + DataContract.StudentsChapter.EMAIL

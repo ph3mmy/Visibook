@@ -53,7 +53,7 @@
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true"/>
 
-        <activity
+   <!--     <activity
             android:name=".ui.DashboardActivity"
             android:exported="true"
             android:label="@string/app_name" >
@@ -63,9 +63,10 @@
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ui.SearchActivity" />
-        </activity>
+        </activity>-->
 
         <activity
+            android:configChanges="orientation|screenSize"
             android:name=".ui.NewDashBoardActivity"
             android:exported="true"
             android:label="@string/app_name" />
@@ -80,9 +81,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
-            <meta-data
+            <!--<meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.DashboardActivity" />
+                android:value=".ui.DashboardActivity" />-->
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -111,7 +112,7 @@
         <activity
             android:name=".ui.PicViewActivity"
             android:label="@string/title_activity_pic_view"
-            android:parentActivityName=".ui.DashboardActivity" >
+            android:parentActivityName=".ui.NewDashBoardActivity" >
 
             <!--
                 <meta-data
@@ -160,11 +161,10 @@
         <activity
             android:name=".ui.Details"
             android:label="@string/title_activity_details"
-            android:parentActivityName=".ui.DashboardActivity"
-            android:theme="@style/Theme.Gardener" >
+            android:theme="@style/Theme.Gardener" ><!--
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.DashboardActivity" />
+                android:value=".ui.DashboardActivity" />-->
         </activity>
         <activity
             android:name=".ui.Settings"
@@ -172,33 +172,9 @@
             android:theme="@style/Theme.Gardener" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.DashboardActivity" />
+                android:value=".ui.NewDashBoardActivity" />
         </activity>
-        <!--
-            <activity
-            android:name=".ui.Preference"
-            android:label="@string/title_activity_preference"
-            android:theme="@style/Theme.Gardener"/>
-        -->
-        <activity android:name=".ui.AddUpdateActivity" />
-        <activity
-            android:name=".ui.UpdateActivity"
-            android:label="@string/title_activity_update"
-            android:parentActivityName=".ui.AddUpdateActivity"
-            android:theme="@style/Theme.Gardener" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.jcedar.visibook.lautech.ui.AddUpdateActivity" />
-        </activity>
-        <activity
-            android:name=".ui.AddActivity"
-            android:label="@string/title_activity_add"
-            android:parentActivityName=".ui.AddUpdateActivity"
-            android:theme="@style/Theme.Gardener" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.jcedar.visibook.lautech.ui.AddUpdateActivity" />
-        </activity>
+
     </application>
 
 </manifest>

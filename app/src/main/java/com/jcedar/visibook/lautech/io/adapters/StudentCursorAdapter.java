@@ -5,17 +5,21 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jcedar.visibook.lautech.R;
 import com.jcedar.visibook.lautech.helper.FormatUtils;
+import com.jcedar.visibook.lautech.helper.PrefUtils;
 import com.jcedar.visibook.lautech.provider.DataContract;
 
 /**
@@ -69,6 +73,18 @@ public class StudentCursorAdapter extends CursorAdapter {
                 cursor.getColumnIndex(DataContract.Students.COURSE));
        unit.setText("Course: "+puc);
 
+        final ImageView imageView = (ImageView) view.findViewById(R.id.user_image);
+        String imageBas64 = cursor.getString(
+                cursor.getColumnIndex(DataContract.Students.IMAGE));
+        if( imageBas64 != null ) {
+            final Bitmap bitmap = PrefUtils.decodeBase64(imageBas64);
+             new Handler().post(new Runnable() {
+                 @Override
+                 public void run() {
+                    imageView.setImageBitmap(bitmap);
+                 }
+             });
+        }
 //
 //        TextView sortCode = (TextView)view.findViewById(R.id.sort_code);
 //        sortCode.setText(cursor.getString(

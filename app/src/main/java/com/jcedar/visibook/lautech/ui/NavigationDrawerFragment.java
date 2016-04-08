@@ -27,7 +27,6 @@ import android.widget.Toast;
 import com.jcedar.visibook.lautech.R;
 import com.jcedar.visibook.lautech.helper.AccountUtils;
 import com.jcedar.visibook.lautech.helper.PrefUtils;
-import com.jcedar.visibook.lautech.helper.UIUtils;
 import com.jcedar.visibook.lautech.ui.view.BezelImageView;
 import com.jcedar.visibook.lautech.ui.view.nav.NavDrawerAdapter;
 import com.jcedar.visibook.lautech.ui.view.nav.NavDrawerItem;
@@ -354,7 +353,7 @@ public class NavigationDrawerFragment extends Fragment {
                 getActivity().finish();
                 break;
             case MenuConstants.NAVDRAWER_ITEM_ADD_UPDATE:
-                intent = new Intent(getActivity(), AddUpdateActivity.class);
+                intent = new Intent(getActivity(), AddUpdateFragment.class);
                 startActivity(intent);
                 getActivity().finish();
                 break;
