@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.jcedar.visibook.lautech.gcm.GcmIntentServices;
-import com.jcedar.visibook.lautech.helper.AccountUtils;
 import com.jcedar.visibook.lautech.helper.AppHelper;
 import com.jcedar.visibook.lautech.helper.AppSettings;
 import com.jcedar.visibook.lautech.helper.PrefUtils;
@@ -92,11 +91,12 @@ public class SyncHelper {
                         syncSummary.putInt(NEW_STUDENT_COUNT, studentHandler.getStudentCount());
                         batch.addAll( operations );
 
-                        if ( AccountUtils.getUserChapter(mContext) != null){
+                        /*if ( AccountUtils.getUserChapter(mContext) != null){
                             String chapter = AccountUtils.getUserChapter(mContext);
                             Log.e(TAG, chapter + " chapter for new update");
-                            new AppHelper(mContext).pullAndSaveStudentChapterDataForSync(chapter);
-                        }
+                            new AppHelper(mContext).pullAndSaveStudentChapterDataForSync();
+                        }*/
+                        new AppHelper().pullAndSaveStudentChapterDataForSync(mContext);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -140,11 +140,12 @@ public class SyncHelper {
                                 studentHandler.parse(response);
                         syncSummary.putInt(UPDATE_COUNT, studentHandler.getStudentCount());
                         batch.addAll( operations );
-                        if ( AccountUtils.getUserChapter(mContext) != null){
+                        /*if ( AccountUtils.getUserChapter(mContext) != null){
                             String chapter = AccountUtils.getUserChapter(mContext);
                             Log.e(TAG, chapter + " chapter for new update");
                             new AppHelper(mContext).pullAndSaveStudentChapterDataForSync(chapter);
-                        }
+                        }*/
+                        new AppHelper().pullAndSaveStudentChapterDataForSync(mContext);
 
                     }
                 } catch (IOException e) {

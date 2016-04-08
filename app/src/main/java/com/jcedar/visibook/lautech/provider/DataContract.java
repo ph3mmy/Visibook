@@ -53,7 +53,7 @@ public class DataContract
         /** A projection of all tables in students table */
         public static final String[] PROJECTION_ALL = {
                 _ID,  NAME, GENDER, CHAPTER, EMAIL, COURSE, PHONE_NUMBER, DATE_OF_BIRTH, DOB_NUMBER,
-                UPDATED, IS_ALUMNI, UPDATE_INFO
+                UPDATED, IS_ALUMNI, UPDATE_INFO, IMAGE
 
     };
 
@@ -97,7 +97,7 @@ public class DataContract
         /** A projection of all tables in studentsChapter table */
         public static final String[] PROJECTION_ALL = {
                 _ID,  ID, NAME, GENDER, CHAPTER, EMAIL, COURSE, PHONE_NUMBER, DATE_OF_BIRTH, DOB_NUMBER,
-                UPDATED, IS_ALUMNI, UPDATE_INFO
+                UPDATED, IS_ALUMNI, UPDATE_INFO, IMAGE
 
         };
 
@@ -122,6 +122,7 @@ public class DataContract
         String DOB_NUMBER = "dob_number";
         String UPDATE_INFO= "updateInfo";
         String IS_ALUMNI = "isAlumni";
+        String IMAGE = "image";
     }
 
     interface StudentChapterColumns{
@@ -136,6 +137,7 @@ public class DataContract
         String DOB_NUMBER = "dob_number";
         String UPDATE_INFO= "updateInfo";
         String IS_ALUMNI = "isAlumni";
+        String IMAGE = "image";
     }
     interface StudentSearchColumns {
         String SEARCH_STUDENT_ID = "student_id";

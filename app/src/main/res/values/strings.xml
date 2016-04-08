@@ -140,4 +140,12 @@
     <string name="title_activity_update">Update</string>
     <string name="title_activity_add">Add A New Name</string>
     <string name="phone">Phone number</string>
+    <string name="conference_labels">Conference labels</string>
+    <string name="excos">Excos</string>
+    <string name="update_name">Update Name</string>
+    <string name="my_profile">My Profile</string>
+    <string name="settings_menu">Settings Menu</string>
+    <string name="log_out">Log Out</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_image_text">Change Image</string>
 </resources>

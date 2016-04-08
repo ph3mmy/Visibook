@@ -52,6 +52,7 @@ public class StudentHandler extends JSONHandler{
                         .withValue(DataContract.Students.DOB_NUMBER, student.getDobNumber())
                         .withValue(DataContract.Students.IS_ALUMNI, student.getIsAlumni())
                         .withValue(DataContract.Students.UPDATE_INFO, student.getUpdateInfo())
+                        .withValue(DataContract.Students.IMAGE, student.getImage())
                         .withValue(DataContract.Students.UPDATED, String.valueOf( System.currentTimeMillis()));
 
                 Log.d(TAG, "Data from Json" + student.getName() + " " + student.getChapter());

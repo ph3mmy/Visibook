@@ -1,11 +1,15 @@
 package com.jcedar.visibook.lautech.ui;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -17,29 +21,45 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.jcedar.visibook.lautech.R;
 import com.jcedar.visibook.lautech.helper.AccountUtils;
 import com.jcedar.visibook.lautech.helper.PrefUtils;
+import com.jcedar.visibook.lautech.provider.DataContract;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by oluwafemi.bamisaye on 3/8/2016.
  */
-public class NewDashBoardActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class NewDashBoardActivity extends AppCompatActivity implements
+        GoogleApiClient.OnConnectionFailedListener, AllStudentListFragment.Listener,
+        AddUpdateFragment.Listener, ProfileFragment.Listener
+{
     private static final String TAG = NewDashBoardActivity.class.getName();
     //Defining Variables
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private GoogleApiClient mGoogleApiClient;
+    private Set<Fragment> mHomeFragments = new HashSet<>();
 
-
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(getResources().getBoolean(R.bool.portrait_only)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
         setContentView(R.layout.activity_new_dashboard);
 
 //        mGoogleApiClient = new GoogleApiClient(this);
@@ -86,7 +106,7 @@ public class NewDashBoardActivity extends AppCompatActivity implements GoogleApi
         profilePhoto.setImageBitmap(decodedImg);
 
         //set UserName
-        String user = PrefUtils.getPersonal(this);
+        final String user = PrefUtils.getPersonal(this);
         username.setText(user);
         username.setTextColor(getResources().getColor(R.color.white));
 
@@ -101,6 +121,14 @@ public class NewDashBoardActivity extends AppCompatActivity implements GoogleApi
         roleString.setTextColor(getResources().getColor(R.color.white));
 
 
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        AllStudentListFragment aslt = new AllStudentListFragment();
+        ft.replace(R.id.frame, aslt);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.addToBackStack(null);
+        ft.commit();
+
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -112,41 +140,32 @@ public class NewDashBoardActivity extends AppCompatActivity implements GoogleApi
                 drawerLayout.closeDrawers();
 
                 Intent intent;
+                Fragment fragment = null;
+                Class fragmentClass = AllStudentListFragment.class;
+
                 //Check to see which item was being clicked and perform appropriate action
                 switch (item.getItemId()){
 
-
                     //Replacing the main content with ContentFragment Which is our Inbox View;
                     case R.id.nav_contactList:
-//                        Toast.makeText(getApplicationContext(), "Conference Selected", Toast.LENGTH_SHORT).show();
-                        intent = new Intent(NewDashBoardActivity.this,DashboardActivity.class);
-                        startActivity(intent);
-                        return true;
-
-                    // For rest of the options we just show a toast on click
-
+                        fragmentClass = AllStudentListFragment.class;
+                        break;
                     case R.id.nav_excos:
                         Toast.makeText(getApplicationContext(),"Excos Selected",Toast.LENGTH_SHORT).show();
-                        return true;
+                        break;
 
                     case R.id.nav_profile:
-//                        Toast.makeText(getApplicationContext(),"Send Selected",Toast.LENGTH_SHORT).show();
-
-                        intent = new Intent(NewDashBoardActivity.this, ProfileActivity.class);
-                        startActivity(intent);
-                        finish();
-                        return true;
+                        fragmentClass = ProfileFragment.class;
+                        break;
 
                     case R.id.nav_update:
-                        intent = new Intent(NewDashBoardActivity.this, AddUpdateActivity.class);
-                        startActivity(intent);
-                        finish();
-                        return true;
+                        fragmentClass = AddUpdateFragment.class;
+                        break;
 
                     case R.id.nav_settings:
                         intent = new Intent(NewDashBoardActivity.this, Settings.class);
                         startActivity(intent);
-                        return true;
+                        break;
 
                     case R.id.nav_logout:
                         if (!AccountUtils.signOut(NewDashBoardActivity.this)) { // if not sync
@@ -155,12 +174,23 @@ public class NewDashBoardActivity extends AppCompatActivity implements GoogleApi
                         } else {
                             Toast.makeText(NewDashBoardActivity.this, "Can't sign you out while sync runs.", Toast.LENGTH_LONG).show();
                         }
-                        return true;
+                        break;
                     default:
+                        fragmentClass = AllStudentListFragment.class;
                         Toast.makeText(getApplicationContext(),"Somethings Wrong",Toast.LENGTH_SHORT).show();
-                        return true;
+                        break;
 
                 }
+                try{
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (Exception  e) {
+                    e.printStackTrace();
+                }
+
+                FragmentManager fm = getSupportFragmentManager();
+                fm.beginTransaction().replace(R.id.frame, fragment).commit();
+
+                return true;
             }
         });
     }
@@ -209,5 +239,42 @@ public class NewDashBoardActivity extends AppCompatActivity implements GoogleApi
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+
+    @Override
+    public void onAllSelected(long studentId) {
+        Intent detailIntent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = DataContract.Students.buildStudentUri(studentId);
+        detailIntent.setData(uri);
+        startActivity(detailIntent);
+    }
+
+    @Override
+    public void onFragmentDetached(Fragment fragment) {
+        mHomeFragments.remove(fragment);
+    }
+
+    @Override
+    public void onFragmentAttached(Fragment fragment) {
+        mHomeFragments.add(fragment);
+    }
+
+/*    @Override
+    protected void onPause() {
+
+        super.onPause();
+
+        getSupportFragmentManager().findFragmentByTag("MyFragment")
+                .setRetainInstance(true);
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+
+        getSupportFragmentManager().findFragmentByTag("MyFragment")
+                .getRetainInstance();
+
+    }*/
 
 }

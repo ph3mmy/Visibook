@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jcedar.visibook.lautech.R;
+import com.jcedar.visibook.lautech.helper.PrefUtils;
 import com.jcedar.visibook.lautech.helper.UIUtils;
 import com.jcedar.visibook.lautech.provider.DataContract;
 
@@ -45,7 +46,7 @@ public class AllStudentsDetailsFragment extends Fragment
     private String phone = "";
     private ImageView imgSendEmail;
     private ImageView imgSendSms;
-    private ImageView imgCall;
+    private ImageView imgCall, imageView;
 
 
     public AllStudentsDetailsFragment() {
@@ -123,6 +124,7 @@ public class AllStudentsDetailsFragment extends Fragment
         imgSendSms = (ImageView) rootView.findViewById(R.id.send_message);
         imgCall = (ImageView) rootView.findViewById(R.id.call_phone);
 
+        imageView = (ImageView) rootView.findViewById(R.id.photo);
         imgCall.setOnClickListener(this);
         imgSendSms.setOnClickListener(this);
         imgSendEmail.setOnClickListener(this);
@@ -204,6 +206,10 @@ public class AllStudentsDetailsFragment extends Fragment
             dateOfBirth.setText(data.getString(
                     data.getColumnIndexOrThrow(DataContract.Students.DATE_OF_BIRTH)));
 
+            String image64 = data.getString(
+                    data.getColumnIndexOrThrow(DataContract.Students.IMAGE));
+            if(image64 != null)
+                imageView.setImageBitmap(PrefUtils.decodeBase64(image64));
             data.close();
         }
 

@@ -2,7 +2,6 @@ package com.jcedar.visibook.lautech.ui;
 
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -194,7 +193,12 @@ public class UpdateFragment extends DialogFragment implements LoaderManager.Load
             super.onPostExecute(aVoid);
             if ( dialog.isShowing() ) dialog.dismiss();
             UIUtils.showToast(getActivity(), "Please wait till you receive a notification");
-            startActivity( new Intent(getActivity(), DashboardActivity.class));
+            /*if( getTag().equalsIgnoreCase("User")){ // from user's profile
+                startActivity( new Intent(getActivity(), NewDashBoardActivity.class));
+                getDialog().dismiss();
+            }*/
+            getDialog().dismiss();
+            //startActivity( new Intent(getActivity(), NewDashBoardActivity.class));
         }
     }
     @Override
@@ -206,12 +210,12 @@ public class UpdateFragment extends DialogFragment implements LoaderManager.Load
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        Uri uri = DataContract.StudentsChapter.buildStudentUri(student_id);
+        Uri uri = DataContract.Students.buildStudentUri(student_id);
         return new CursorLoader( getActivity(),
                 uri,
-                DataContract.StudentsChapter.PROJECTION_ALL,
+                DataContract.Students.PROJECTION_ALL,
                 null, null,
-                DataContract.StudentsChapter.SORT_ORDER_DEFAULT);
+                DataContract.Students.SORT_ORDER_DEFAULT);
 
     }
 
@@ -219,20 +223,20 @@ public class UpdateFragment extends DialogFragment implements LoaderManager.Load
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
 
-        id = data.getString( data.getColumnIndex(DataContract.StudentsChapter.ID));
-        name.setText(data.getString( data.getColumnIndex(DataContract.StudentsChapter.NAME)));
+        id = data.getString( data.getColumnIndex(DataContract.Students._ID));
+        name.setText(data.getString( data.getColumnIndex(DataContract.Students.NAME)));
 
-        email.setText(data.getString( data.getColumnIndex(DataContract.StudentsChapter.EMAIL)));
+        email.setText(data.getString( data.getColumnIndex(DataContract.Students.EMAIL)));
 
-        course.setText(data.getString( data.getColumnIndex(DataContract.StudentsChapter.COURSE)));
+        course.setText(data.getString( data.getColumnIndex(DataContract.Students.COURSE)));
 
-        phone_number.setText(data.getString( data.getColumnIndex(DataContract.StudentsChapter.PHONE_NUMBER)));
+        phone_number.setText(data.getString( data.getColumnIndex(DataContract.Students.PHONE_NUMBER)));
 
-        oldDate = data.getString( data.getColumnIndex(DataContract.StudentsChapter.DATE_OF_BIRTH));
+        oldDate = data.getString( data.getColumnIndex(DataContract.Students.DATE_OF_BIRTH));
         date.setText(oldDate);
 
-        String gender = data.getString( data.getColumnIndex(DataContract.StudentsChapter.GENDER));
-        int alumni = data.getInt( data.getColumnIndex(DataContract.StudentsChapter.IS_ALUMNI));
+        String gender = data.getString( data.getColumnIndex(DataContract.Students.GENDER));
+        int alumni = data.getInt( data.getColumnIndex(DataContract.Students.IS_ALUMNI));
 
         boolean isAlumni = ( alumni != 0 );
         Log.e(TAG, alumni+ " is alumni "+isAlumni);

@@ -46,6 +46,9 @@ public class Student {
     @Expose @SerializedName("isAlumni")
     private String isAlumni;
 
+    @Expose @SerializedName("image")
+    private String image;
+
     public String getName() {
         return name;
     }
@@ -88,6 +91,10 @@ public class Student {
 
     public String getIsAlumni() {
         return isAlumni;
+    }
+
+    public String getImage() {
+        return image;
     }
 
     public static Student[] fromJson(String json){
