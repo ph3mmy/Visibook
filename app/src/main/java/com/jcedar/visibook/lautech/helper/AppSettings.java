@@ -15,6 +15,7 @@ public class AppSettings {
     public static DateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
 
     public static final String SERVER_URL = "http://www.mobile.jcedar.com.ng/lautech/";
+    public static final String SERVER_IMAGE_URL = SERVER_URL+"uploads/";
 
     public static String getDateOneMonthAgo(){
         Calendar calendar = Calendar.getInstance();

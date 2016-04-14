@@ -124,7 +124,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         if( ! AccountUtils.isFirstRun(getActivity()) ) {
 //            imageView.setImageBitmap(UIUtils.getProfilePic(getActivity()));
-            imageView.setImageBitmap(PrefUtils.decodeBase64(PrefUtils.getPhoto(getActivity())));
+            imageView.setImageBitmap(PrefUtils.getPhoto(getActivity()));
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

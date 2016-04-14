@@ -1,6 +1,7 @@
 package com.jcedar.visibook.lautech.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -24,8 +26,13 @@ import android.widget.TextView;
 import com.jcedar.visibook.lautech.R;
 import com.jcedar.visibook.lautech.adapter.RecyclerCursorAdapterAll;
 import com.jcedar.visibook.lautech.io.adapters.StudentCursorAdapter;
+import com.jcedar.visibook.lautech.provider.AndroidDatabaseManager;
 import com.jcedar.visibook.lautech.provider.DataContract;
 import com.jcedar.visibook.lautech.ui.view.SimpleSectionedListAdapter;
+
+import java.util.Arrays;
+
+import static com.jcedar.visibook.lautech.ui.NewDashBoardActivity.getToolbar;
 
 public class AllStudentListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     protected static final String NAIRA = "\u20A6";
@@ -36,6 +43,7 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_IDS = "ids";
 
     // TODO: Rename and change types of parameters
     private int mPosition;
@@ -47,12 +55,19 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     private TextView tvError;
     private Bundle mHomeBundle = Bundle.EMPTY;
     private String _POSITION = "position";
+    private String LOADER_KEY = "loader_key";
     private Listener mCallback;
     static String context;
 
     RecyclerView recyclerView;
     RecyclerCursorAdapterAll resultsCursorAdapter;
     View rootView;
+    String[] idsToLoad;
+
+    private static final int NORMAL_LOADER_ID = 1;
+    private static final int BIRTHDAY_LOADER_ID = 2;
+
+    static int presentId;
 
     public static AllStudentListFragment newInstance(int position) {
         AllStudentListFragment fragment = new AllStudentListFragment();
@@ -63,6 +78,15 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
         fragment.setArguments(args);
         return fragment;
     }
+    public static AllStudentListFragment newInstance(String[] ids) {
+            AllStudentListFragment fragment = new AllStudentListFragment();
+            Bundle args = new Bundle();
+            args.putStringArray(ARG_IDS, ids);
+
+
+            fragment.setArguments(args);
+            return fragment;
+        }
 
     public AllStudentListFragment() {
         // Required empty public constructor
@@ -73,15 +97,26 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // Initialize loader
-        getLoaderManager().initLoader(1, null, this);
+        //getLoaderManager().initLoader(NORMAL_LOADER_ID, null, this);
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mPosition = getArguments().getInt(ARG_PARAM1);
+
+        if ( savedInstanceState != null){
+            presentId = savedInstanceState.getInt(LOADER_KEY);
+        } else {
+            presentId = NORMAL_LOADER_ID;
         }
+
+        if (getArguments() != null) {
+            idsToLoad = getArguments().getStringArray(ARG_IDS);
+            Log.e(TAG, "ids " + Arrays.toString(idsToLoad));
+            getLoaderManager().initLoader(BIRTHDAY_LOADER_ID, null, this);
+        }
+
 
         mAdapter = new StudentCursorAdapter(getActivity(), null,
                 R.layout.list_n_item_student);
@@ -100,6 +135,8 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putInt(LOADER_KEY, presentId);
+        Log.e(TAG, "present id " + presentId);
     }
 
     @Override
@@ -120,7 +157,8 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
             return rootView;
         }
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
-
+        if(getToolbar() != null)
+            getToolbar().setVisibility(View.VISIBLE);
         recyclerView = (RecyclerView) rootView.findViewById( R.id.recyclerview );
         resultsCursorAdapter = new RecyclerCursorAdapterAll( getActivity() );
 
@@ -143,7 +181,7 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
 
                 long Id = data.getLong(
                         data.getColumnIndex(DataContract.Students._ID));
-                Log.d(TAG, "selectedId = " + Id + _POSITION);
+
                 // add position to bundle
                 //mHomeBundle.putInt(_POSITION, position);
                 mCallback.onAllSelected(Id);
@@ -166,6 +204,16 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_all_student_list, menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if( item.getItemId() == R.id.action_update){
+            startActivity( new Intent(getActivity(), AndroidDatabaseManager.class));
+        }
+        return true;
     }
 
     interface Listener {
@@ -206,14 +254,19 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
             if (!isAdded()) {
                 return;
             }
-            getLoaderManager().restartLoader(1, null, AllStudentListFragment.this);
+            getLoaderManager().restartLoader(presentId, null, AllStudentListFragment.this);
         }
     };
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri uri = DataContract.Students.CONTENT_URI;
-        return new CursorLoader(
+
+        switch (id){
+            case NORMAL_LOADER_ID:
+                presentId = NORMAL_LOADER_ID;
+                return new CursorLoader(
                     getActivity(),
                     uri,
                     DataContract.Students.PROJECTION_ALL,
@@ -221,13 +274,55 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
                     null,           // arguments
                     DataContract.Students.NAME + " ASC"
             );
+            case BIRTHDAY_LOADER_ID:{
+                presentId = BIRTHDAY_LOADER_ID;
+
+                String selection =  DataContract.Students._ID+ " in (";
+                for(int i=0; i<idsToLoad.length; i++)
+                    selection += "?, ";
+
+                selection = selection.substring(0, selection.length() - 2) + ")";
+
+                Log.e(TAG, "sec "+selection);
+
+                CursorLoader cursor = new CursorLoader(
+                        getActivity(),
+                        uri,
+                        DataContract.Students.PROJECTION_ALL,
+                        selection,    // selection
+                        idsToLoad,           // arguments
+                        null
+                        //DataContract.Students.NAME + " ASC"
+                );
+                String cc = cursor.getSelection();
+                Log.e(TAG, "query =="+cc);
+                Log.e(TAG, "query =="+Arrays.toString(cursor.getSelectionArgs()));
+                return cursor;
+            }
+
+            default:{
+                presentId = NORMAL_LOADER_ID;
+                return new CursorLoader(
+                        getActivity(),
+                        uri,
+                        DataContract.Students.PROJECTION_ALL,
+                        null,    // selection
+                        null,           // arguments
+                        DataContract.Students.NAME + " ASC");
+            }
+        }
+
     }
 
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        resultsCursorAdapter.swapCursor(data);
+        if(data.moveToFirst()) {
+            resultsCursorAdapter.swapCursor(data);
+        }
+
+        //data.close();
 
     }
 
@@ -240,7 +335,7 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     private void updateDashboard() {
         // do work
         try {
-            getLoaderManager().restartLoader(0, null, this);
+            getLoaderManager().restartLoader(presentId, null, this);
         } catch (Exception e) {
             Log.e(TAG, "" + e);
 
@@ -252,6 +347,11 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     public void onResume() {
         super.onResume();
         updateDashboard();
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
     }
 
 

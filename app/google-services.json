@@ -17,6 +17,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "940366209071-30olmmu89icds7t20h3fl1206id2vv8f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jcedar.visibook.lautech",
+            "certificate_hash": "42575DA3E57B44BBC38E0FF126E05DCF2A1B892A"
+          }
+        },
+        {
           "client_id": "940366209071-ht4b9eei1bmhhu444ece32gg09i0dn0g.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

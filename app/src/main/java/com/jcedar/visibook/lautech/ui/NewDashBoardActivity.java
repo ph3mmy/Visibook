@@ -1,7 +1,7 @@
 package com.jcedar.visibook.lautech.ui;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,10 +26,12 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.jcedar.visibook.lautech.R;
+import com.jcedar.visibook.lautech.gcm.GcmIntentServices;
 import com.jcedar.visibook.lautech.helper.AccountUtils;
 import com.jcedar.visibook.lautech.helper.PrefUtils;
 import com.jcedar.visibook.lautech.provider.DataContract;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,13 +44,14 @@ public class NewDashBoardActivity extends AppCompatActivity implements
 {
     private static final String TAG = NewDashBoardActivity.class.getName();
     //Defining Variables
-    private Toolbar toolbar;
+    private static Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private GoogleApiClient mGoogleApiClient;
     private Set<Fragment> mHomeFragments = new HashSet<>();
+    private ActionBarDrawerToggle drawerToggle;
 
-    public Toolbar getToolbar() {
+    public static Toolbar getToolbar() {
         return toolbar;
     }
 
@@ -56,9 +59,9 @@ public class NewDashBoardActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getResources().getBoolean(R.bool.portrait_only)){
+        /*if(getResources().getBoolean(R.bool.portrait_only)){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        }*/
 
         setContentView(R.layout.activity_new_dashboard);
 
@@ -67,8 +70,11 @@ public class NewDashBoardActivity extends AppCompatActivity implements
         // Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeAsUpIndicator(R.mipmap.ic_menu);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.mipmap.ic_menu);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
 
         //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -77,20 +83,11 @@ public class NewDashBoardActivity extends AppCompatActivity implements
 
         // Initializing Drawer Layout and ActionBarToggle
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-//        drawerToggle = setupDrawerToggle();
+        drawerToggle = setupDrawerToggle();
 
         // Tie DrawerLayout events to the ActionBarToggle
-        drawerLayout.setDrawerListener(setupDrawerToggle());
+        drawerLayout.setDrawerListener(drawerToggle);
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                menuItem.setChecked(true);
-                drawerLayout.closeDrawers();
-                Toast.makeText(NewDashBoardActivity.this, menuItem.getTitle(), Toast.LENGTH_LONG).show();
-                return true;
-            }
-        });
 
         //initialize elements of the drawer
         ImageView profilePhoto = (ImageView) headerView.findViewById(R.id.profile_image);
@@ -99,10 +96,11 @@ public class NewDashBoardActivity extends AppCompatActivity implements
         TextView roleString = (TextView) headerView.findViewById(R.id.roleString);
 
         //set drawer Item
-        String photoString = PrefUtils.getPhoto(this);
+        //String photoString = PrefUtils.getPhoto(this);
 
-        Log.d(TAG, " Handle signIn email of user" + photoString);
-        Bitmap decodedImg = PrefUtils.decodeBase64(photoString);
+        //Log.d(TAG, " Handle signIn email of user" + photoString);
+        Bitmap decodedImg = PrefUtils.getPhoto(this);
+        //Bitmap decodedImg = PrefUtils.decodeBase64(photoString);
         profilePhoto.setImageBitmap(decodedImg);
 
         //set UserName
@@ -117,17 +115,29 @@ public class NewDashBoardActivity extends AppCompatActivity implements
 
         //set User Role
 //        String roleTxt = PrefUtils.getRole(this);
-        roleString.setText("member");
+        roleString.setText(R.string.member);
         roleString.setTextColor(getResources().getColor(R.color.white));
 
-
+        AllStudentListFragment aslt;
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        AllStudentListFragment aslt = new AllStudentListFragment();
-        ft.replace(R.id.frame, aslt);
+
+
+        if( getIntent().getExtras() != null ){ //coming from GcmIntentService
+            String[] ids = getIntent().getStringArrayExtra(GcmIntentServices.BUNDLE_ID_ARRAY);
+            Log.e(TAG, "ids "+ Arrays.toString(ids));
+
+            aslt =  AllStudentListFragment.newInstance(ids);
+        } else {
+            aslt = new AllStudentListFragment();
+        }
+
+        ft.add(R.id.frame, aslt);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.addToBackStack(null);
         ft.commit();
 
+
+        navigationView.getMenu().getItem(0).setChecked(true);
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -155,10 +165,12 @@ public class NewDashBoardActivity extends AppCompatActivity implements
                         break;
 
                     case R.id.nav_profile:
+                        toolbar.setVisibility(View.GONE);
                         fragmentClass = ProfileFragment.class;
                         break;
 
                     case R.id.nav_update:
+                        toolbar.setVisibility(View.VISIBLE);
                         fragmentClass = AddUpdateFragment.class;
                         break;
 
@@ -197,6 +209,18 @@ public class NewDashBoardActivity extends AppCompatActivity implements
 
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, drawerLayout, R.mipmap.ic_menu, R.string.drawer_open,  R.string.drawer_close);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
     }
 
     private void signOutUser() {

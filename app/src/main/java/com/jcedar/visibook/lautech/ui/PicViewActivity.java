@@ -10,7 +10,8 @@ import android.widget.ImageView;
 import com.facebook.appevents.AppEventsLogger;
 import com.jcedar.visibook.lautech.R;
 import com.jcedar.visibook.lautech.helper.AccountUtils;
-import com.jcedar.visibook.lautech.helper.UIUtils;
+
+import static com.jcedar.visibook.lautech.helper.PrefUtils.getPhoto;
 
 public class PicViewActivity extends AppCompatActivity {
 
@@ -40,7 +41,7 @@ public class PicViewActivity extends AppCompatActivity {
                 }
             });
         }
-            imageView.setImageBitmap(UIUtils.getProfilePic(this));
+            imageView.setImageBitmap(getPhoto(this));
         }
 
     @Override

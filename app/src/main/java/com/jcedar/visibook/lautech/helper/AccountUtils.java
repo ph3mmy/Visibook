@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -44,6 +45,7 @@ public class AccountUtils {
     public static final String PROPERTY_REG_ID = "registration_id";
     public static final String PROPERTY_APP_VERSION = "appVersion";
     private static final String PREF_SERVER_ID = "server_id";
+    private static final String PREF_DOB_NUMBER = "dob_number";
 
     String hash = "+MpC+7H4vWDozl9v3x+c26fTirY=";
     private static final String PREF_NAME = "name";
@@ -169,7 +171,7 @@ public class AccountUtils {
 
     public static void setUserName(final Context context, final String name){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putString(PREF_NAME, name).commit();
+        sp.edit().putString(PREF_NAME, name).apply();
     }
 
     public static String getUserName(final Context context) {
@@ -179,7 +181,7 @@ public class AccountUtils {
 
     public static void setUserId(final Context context, final String userId){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putString(PREF_ID, userId).commit();
+        sp.edit().putString(PREF_ID, userId).apply();
     }
 
     public static String getUserId(final Context context) {
@@ -189,19 +191,19 @@ public class AccountUtils {
 
     public static void setId(final Context context, final String userId){
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-            sp.edit().putString(PREF_SERVER_ID, userId).commit();
+            sp.edit().putString(PREF_SERVER_ID, userId).apply();
         }
 
         public static String getId(final Context context) {
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-            return sp.getString(PREF_SERVER_ID, null);
+            return sp.getString(PREF_SERVER_ID, "");
         }
 
 
 
     public static void setUserGender(final Context context, final String gender){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putString(PREF_GENDER, gender).commit();
+        sp.edit().putString(PREF_GENDER, gender).apply();
     }
 
     public static String getUserGender(final Context context) {
@@ -271,6 +273,16 @@ public class AccountUtils {
     public static String getUserDOB(final Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getString(PREF_DOB, null);
+    }
+
+    public static void setUserDOBNumber(final Context context, final String dob){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit().putString(PREF_DOB_NUMBER, dob).apply();
+    }
+
+    public static String getUserDOBNumber(final Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getString(PREF_DOB_NUMBER, null);
     }
 
     private static final String PREF_PHONE_NUMBER_1 = "phone_number1";
@@ -370,5 +382,16 @@ public class AccountUtils {
 
     }
 
+
+    public static boolean hasImage(Cursor cursor){
+        String imagePresent = cursor.getString(
+                cursor.getColumnIndex(DataContract.Students.IMAGE));
+        if(imagePresent != null){
+            Log.e(TAG, "image =="+imagePresent);
+            if( imagePresent.equals("1"))
+                return true;
+        }
+        return false;
+    }
 
 }

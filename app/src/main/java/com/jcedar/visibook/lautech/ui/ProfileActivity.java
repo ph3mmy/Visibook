@@ -49,10 +49,10 @@ public class ProfileActivity extends BaseActivity {
                 return false;
             }
         });
-        Drawable d = new BitmapDrawable(getResources(), PrefUtils.decodeBase64(PrefUtils.getPhoto(this)));
+        Drawable d = new BitmapDrawable(getResources(), PrefUtils.getPhoto(this));
 
         toolbarLayout.setStatusBarScrim(d);
-        toolbarLayout.setStatusBarScrimColor(UIUtils.getDominantColor(PrefUtils.decodeBase64(PrefUtils.getPhoto(this))));
+        toolbarLayout.setStatusBarScrimColor(UIUtils.getDominantColor(PrefUtils.getPhoto(this)));
         //imageView.setImageBitmap(UIUtils.getProfilePic(this));
         fullName.setText(AccountUtils.getUserName(this));
         emailView.setText(

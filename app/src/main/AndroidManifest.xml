@@ -175,6 +175,7 @@
                 android:value=".ui.NewDashBoardActivity" />
         </activity>
 
+        <activity android:name=".provider.AndroidDatabaseManager"/>
     </application>
 
 </manifest>

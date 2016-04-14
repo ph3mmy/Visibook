@@ -48,7 +48,7 @@ public class PrefUtils {
 
     public static void setEmail(Context context, String key){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        preferences.edit().putString(EMAIL_KEY, key).commit();
+        preferences.edit().putString(EMAIL_KEY, key).apply();
     }
 
     public static String getEmail(Context context) {
@@ -61,21 +61,21 @@ public class PrefUtils {
 
     public static void setPhoto(Context context, Bitmap image){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        preferences.edit().putString(PHOTO_KEY, encodeTobase64(image)).commit();
+        preferences.edit().putString(PHOTO_KEY, encodeTobase64(image)).apply();
     }
 
-    public static String getPhoto(Context context) {
+    public static Bitmap getPhoto(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PHOTO_KEY, "0");
+        String image = preferences.getString(PHOTO_KEY, "0");
+        return decodeBase64(image);
     }
 
     public static String encodeTobase64(Bitmap image) {
         Bitmap immage = image;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        immage.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        immage.compress(Bitmap.CompressFormat.JPEG, 90, baos);
         byte[] b = baos.toByteArray();
-        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
-        return imageEncoded;
+        return Base64.encodeToString(b, Base64.DEFAULT);
     }
 
     // method for base64 to bitmap
