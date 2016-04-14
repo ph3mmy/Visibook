@@ -32,6 +32,9 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
 
+import static com.jcedar.visibook.lautech.helper.PrefUtils.encodeTobase64;
+import static com.jcedar.visibook.lautech.helper.PrefUtils.getPhoto;
+
 
 public class UpdateFragment extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor>, DatePickerDialog.OnDateSetListener {
 
@@ -87,9 +90,12 @@ public class UpdateFragment extends DialogFragment implements LoaderManager.Load
         //detail = (TextView) rootView.findViewById( R.id.);
         name = (EditText) rootView.findViewById( R.id.etName );
         email = (EditText) rootView.findViewById( R.id.etEmail );
+        email.setEnabled(false); //dont make users edit their email
+
         course = (EditText) rootView.findViewById( R.id.etCourse );
         phone_number = (EditText) rootView.findViewById( R.id.etPhone );
         date = (EditText) rootView.findViewById( R.id.etDOB );
+        date.setClickable(false);
 
         male = (RadioButton) rootView.findViewById( R.id.rbMale );
         female = (RadioButton) rootView.findViewById( R.id.rbFemale );
@@ -158,14 +164,6 @@ public class UpdateFragment extends DialogFragment implements LoaderManager.Load
         return rootView;
     }
 
-    Thread updateThread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            updateExistingEntries(id, nameStr,
-                    gender, emailStr, courseStr, phone_numberStr,
-                    dateStr, dobNumber, isAlumni);
-        }
-    });
 
     private class PostUpdate extends AsyncTask<Void, Void, Void>{
         ProgressDialog dialog = new ProgressDialog(getActivity());
@@ -184,7 +182,7 @@ public class UpdateFragment extends DialogFragment implements LoaderManager.Load
         protected Void doInBackground(Void... params) {
             updateExistingEntries(id, nameStr,
                     gender, emailStr, courseStr, FormatUtils.removeEscapeXters(phone_numberStr),
-                    dateStr, dobNumber, isAlumni);
+                    dateStr, dobNumber, isAlumni, encodeTobase64( getPhoto(getActivity())));
             return null;
         }
 
@@ -193,12 +191,8 @@ public class UpdateFragment extends DialogFragment implements LoaderManager.Load
             super.onPostExecute(aVoid);
             if ( dialog.isShowing() ) dialog.dismiss();
             UIUtils.showToast(getActivity(), "Please wait till you receive a notification");
-            /*if( getTag().equalsIgnoreCase("User")){ // from user's profile
-                startActivity( new Intent(getActivity(), NewDashBoardActivity.class));
-                getDialog().dismiss();
-            }*/
+
             getDialog().dismiss();
-            //startActivity( new Intent(getActivity(), NewDashBoardActivity.class));
         }
     }
     @Override
@@ -263,7 +257,7 @@ public class UpdateFragment extends DialogFragment implements LoaderManager.Load
 
     public void updateExistingEntries(String id, String name, String gender, String email,
                                              String course, String phone_number, String dateStr,
-                                             String dobNumber, String isAlumni){
+                                             String dobNumber, String isAlumni, String image){
         String userId = AccountUtils.getId( getActivity() );
         String userChapter = AccountUtils.getUserChapter( getActivity() );
         Log.e(TAG, userId+" "+userChapter+" \n"+id+" "+name +" \n"+gender+ " "+email+" \n"
@@ -274,7 +268,7 @@ public class UpdateFragment extends DialogFragment implements LoaderManager.Load
         //if ( userChapter != null ){
             Log.e(TAG, userId+"updating student "+name +"'s details ");
             String url = String.format(AppSettings.SERVER_URL
-                            +"update.php?" +
+                            + "update.php?" +
                             "id=%s" +
                             "&name=%s" +
                             "&gender=%s" +
@@ -283,17 +277,17 @@ public class UpdateFragment extends DialogFragment implements LoaderManager.Load
                             "&email=%s" +
                             "&phone_number=%s" +
                             "&dobNumber=%s" +
-                            "&dobString=%s"+
-                            "&userId=%s"+
-                            "&isAlumni=%s",
+                            "&dobString=%s" +
+                            "&userId=%s" +
+                            "&isAlumni=%s" +
+                            "&image=%s",
 
                     id, name, gender, userChapter,
                     course, email, phone_number,
-                    dobNumber, dateStr, userId, isAlumni
-
-            );
+                    dobNumber, dateStr, userId, isAlumni, image);
 
 
+            Log.e(TAG, "url=="+url);
             String response =  ServiceHandler.makeServiceCall (url, ServiceHandler.GET);
             if(response == null){
                 return;

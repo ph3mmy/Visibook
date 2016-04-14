@@ -48,6 +48,8 @@ import org.json.JSONTokener;
 
 import java.io.InputStream;
 
+import static com.jcedar.visibook.lautech.helper.PrefUtils.setPhoto;
+
 /**
  * Created by oluwafemi.bamisaye on 3/26/2016.
  */
@@ -117,7 +119,6 @@ public class GoogleSignIn extends FragmentActivity implements GoogleApiClient.On
             dashbIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(dashbIntent);
 
-        } else {
         }
     }
 
@@ -211,7 +212,7 @@ public class GoogleSignIn extends FragmentActivity implements GoogleApiClient.On
         } else {
             Bitmap def = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_default_user);
 
-            PrefUtils.setPhoto(this, def);
+            setPhoto(this, def);
             UIUtils.setProfilePic(this, def);
 
         }
@@ -355,7 +356,7 @@ public class GoogleSignIn extends FragmentActivity implements GoogleApiClient.On
 
             Log.e(TAG, "ONPOSTEXECUTE result    " +result);
             if (result != null){
-                PrefUtils.setPhoto(GoogleSignIn.this, result);
+                setPhoto(GoogleSignIn.this, result);
                 UIUtils.setProfilePic(GoogleSignIn.this, result);
                 String m = PrefUtils.encodeTobase64(result);
                 Log.e(TAG, "Encoded Profile image " + m);
@@ -378,16 +379,25 @@ public class GoogleSignIn extends FragmentActivity implements GoogleApiClient.On
         try {
             AccountUtils.setId(this, student[0].getId());
             AccountUtils.setUserGender(this, student[0].getGender());
-            AccountUtils.setUserChapter(this, student[0].getChapter());
+            AccountUtils.setUserChapter(this, "Lautech");
+            //AccountUtils.setUserChapter(this, student[0].getChapter());
             AccountUtils.setUserEmail(this, student[0].getEmail());
             AccountUtils.setUserCourse(this, student[0].getCourse());
             AccountUtils.setUserPhoneNumber(this, student[0].getPhoneNumber());
             AccountUtils.setUserDOB(this, student[0].getDateOfBirth());
+            AccountUtils.setUserDOBNumber(this, student[0].getDobNumber());
             Boolean b = Boolean.getBoolean(student[0].getIsAlumni());
             AccountUtils.setUserName(this, student[0].getName());
+            String imageString = student[0].getImage();
+            if(imageString != null) {
+                //ToDo get image for this user
+                String url = String.format(AppSettings.SERVER_IMAGE_URL+"%s.png", student[0].getId());
+                new LoadProfileImage().execute(url);
+            }
+
             AccountUtils.setIsAlumni(this, b);
 
-            Log.e(TAG, student[0].getChapter() + " chapter");
+            Log.e(TAG, student[0].getChapter() + " chapter "+student[0].getId());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

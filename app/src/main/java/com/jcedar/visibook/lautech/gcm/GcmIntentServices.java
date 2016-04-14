@@ -27,7 +27,12 @@ import com.jcedar.visibook.lautech.helper.AppSettings;
 import com.jcedar.visibook.lautech.helper.PrefUtils;
 import com.jcedar.visibook.lautech.sync.SyncHelper;
 import com.jcedar.visibook.lautech.ui.DashboardActivity;
+import com.jcedar.visibook.lautech.ui.NewDashBoardActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +41,7 @@ public class GcmIntentServices extends IntentService {
     public static final int NOTIFICATION_ID = 1;
     private static final String TAG = "GcmIntentService";
     private static final String PHONE_NUMBER = "phoneNumber";
+    public static final String BUNDLE_ID_ARRAY = "array_of_sent_ids";
     NotificationCompat.Builder builder;
     public Uri uri;
     public int vibrate;
@@ -43,9 +49,10 @@ public class GcmIntentServices extends IntentService {
     Bundle syncSummary = Bundle.EMPTY;
     //Context context = getApplicationContext();
     public  final int birthdayId = 1111;
+    public  final int multipleBirthdayId = 1112;
     public  final int newStudent = 2222;
     public  final int update = 3333;
-
+    public static String[] ids;
 
     String phoneNumber;
     private static final Map<String, GCMCommand> MESSAGE_RECEIVERS;
@@ -80,12 +87,7 @@ public class GcmIntentServices extends IntentService {
              * any message types you're not interested in, or that you don't
              * recognize.
              */
-            if (GoogleCloudMessaging. MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                //sendNotification("Send error: " + extras.toString());
-            } else if (GoogleCloudMessaging. MESSAGE_TYPE_DELETED.equals(messageType)) {
-                //sendNotification("Deleted messages on server: " + extras.toString());
-                // If it's a regular GCM message, do some work.
-            } else if (GoogleCloudMessaging. MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+              if (GoogleCloudMessaging. MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // This loop represents the service doing some work.
                 for (int i=0; i<5; i++) {
                     Log.i(TAG, "Working... " + (i+1) + "/5 @ " + SystemClock.elapsedRealtime());
@@ -98,19 +100,48 @@ public class GcmIntentServices extends IntentService {
                 Log.e(TAG, "Received: " + extras.toString());
                 SyncHelper mSyncHelper = new SyncHelper(getApplicationContext());
                 Log.d(TAG, "Sync Extras " + extras.toString());
-                int action = Integer.parseInt(extras.getString("code"));
-                Log.e(TAG, action+" action");
+
+                  String code = extras.getString("code");
+                  int action = 0;
+                  if (code != null) {
+                      action = Integer.parseInt(code);
+                  }
+                  Log.e(TAG, action+" action");
                 String message = extras.getString("Notice");
                 //sendNotification(message);
 
                 switch (action){
 
-                    case 100:
-                        phoneNumber = extras.getString("phone");
-                        AccountUtils.setPhoneNumber(this, phoneNumber);
-                        Log.e(TAG, phoneNumber + " phoneNumber");
-                        // Post notification of received message.
-                        displayNotification(this, message, birthdayId, 0,  "Birthday");
+                    case 100: {
+                        String response = extras.getString("response");
+
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            int length = jsonArray.length();
+
+                            if( length == 1){
+                                //just one user's birthday
+                                phoneNumber = jsonArray.getJSONObject(0).getString("phone");
+                                AccountUtils.setPhoneNumber(this, phoneNumber);
+                                Log.e(TAG, phoneNumber + " phoneNumber");
+
+                                displayNotification(this, message, birthdayId, 0, "Birthday");
+                            } else {
+                                String[] allIds = new String[length];
+
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    allIds[i] = jsonArray.getJSONObject(i).getString("id");
+                                }
+                                ids = allIds;
+                                Log.e(TAG, "ids "+ Arrays.toString(ids));
+
+                                displayNotification(this, message, multipleBirthdayId, 0, "Birthday");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
                         break;
                     case 101:
                         Log.e(TAG, "new name added");
@@ -122,7 +153,8 @@ public class GcmIntentServices extends IntentService {
                         break;
                     case 201:
                         Log.e(TAG, "a name updated");
-                        long id = Long.parseLong(extras.getString("updatedId"));
+                        String updateId = extras.getString("updatedId");
+                        long id = Long.parseLong(updateId);
                         syncSummary = mSyncHelper.performUpdateStudentSync(id);
 
                         int updateStudentNo = syncSummary.getInt( SyncHelper.UPDATE_COUNT, 0);
@@ -134,7 +166,6 @@ public class GcmIntentServices extends IntentService {
 
                         break;
                 }
-                Log.e(TAG, "Received: " + extras.toString());
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -162,9 +193,9 @@ public class GcmIntentServices extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.mipmap.ic_user)
                         .setContentTitle("VisiBook")
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.mipmap.ic_user)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
                         .setContentText(msg)
@@ -202,7 +233,7 @@ public class GcmIntentServices extends IntentService {
             vibrate = 0;
         }
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.mipmap.ic_user)
                         .setContentTitle(contentTitle)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(message))
@@ -231,6 +262,15 @@ public class GcmIntentServices extends IntentService {
                      .addAction(0, "Call", callIntent );
                  /*mBuilder.addAction(R.mipmap.ic_sms, "Send SMS", smsIntent )
                      .addAction(R.mipmap.ic_call, "Call", callIntent );*/
+                break;
+            case multipleBirthdayId:
+                Intent listS = new Intent(this, NewDashBoardActivity.class);
+                Bundle b = new Bundle();
+
+                b.putStringArray(BUNDLE_ID_ARRAY, ids);
+                listS.putExtras(b);
+                PendingIntent listIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), listS, 0);
+                mBuilder.addAction(0, "View them", listIntent);
                 break;
             case newStudent:
                 mBuilder.setContentInfo( Integer.toString( number ));

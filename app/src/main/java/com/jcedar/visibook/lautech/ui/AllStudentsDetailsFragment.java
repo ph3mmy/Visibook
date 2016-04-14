@@ -21,10 +21,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.jcedar.visibook.lautech.R;
-import com.jcedar.visibook.lautech.helper.PrefUtils;
+import com.jcedar.visibook.lautech.helper.AppSettings;
 import com.jcedar.visibook.lautech.helper.UIUtils;
 import com.jcedar.visibook.lautech.provider.DataContract;
+
+
+import static com.jcedar.visibook.lautech.helper.AccountUtils.hasImage;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -47,6 +51,7 @@ public class AllStudentsDetailsFragment extends Fragment
     private ImageView imgSendEmail;
     private ImageView imgSendSms;
     private ImageView imgCall, imageView;
+
 
 
     public AllStudentsDetailsFragment() {
@@ -85,8 +90,7 @@ public class AllStudentsDetailsFragment extends Fragment
         Bundle args = getArguments();
         if (args != null) {
             mParam1 = args.getString(ARG_PARAM1);
-            String payItemId = Long.toString(args.getLong(ARGS_ALL_STUDENT_ID));
-            cId = payItemId;
+            cId = Long.toString(args.getLong(ARGS_ALL_STUDENT_ID));
 
         }
     }
@@ -161,6 +165,10 @@ public class AllStudentsDetailsFragment extends Fragment
         }
 
         if(data != null && data.moveToFirst()) {
+
+            String userId = data.getString(
+                    data.getColumnIndexOrThrow(DataContract.Students._ID));
+
             nameStr = data.getString(
                     data.getColumnIndexOrThrow(DataContract.Students.NAME));
             name.setText(nameStr);
@@ -206,10 +214,18 @@ public class AllStudentsDetailsFragment extends Fragment
             dateOfBirth.setText(data.getString(
                     data.getColumnIndexOrThrow(DataContract.Students.DATE_OF_BIRTH)));
 
-            String image64 = data.getString(
-                    data.getColumnIndexOrThrow(DataContract.Students.IMAGE));
-            if(image64 != null)
-                imageView.setImageBitmap(PrefUtils.decodeBase64(image64));
+            if ( hasImage(data)){
+                String url = String.format(AppSettings.SERVER_IMAGE_URL + "%s.png", userId);
+                Log.e(TAG, "image url == " + url);
+
+
+                Glide.with(getActivity())
+                        .load(url)
+                        .centerCrop()
+                        .placeholder(R.drawable.person_image_empty)
+                        .crossFade()
+                        .into(imageView);
+            }
             data.close();
         }
 

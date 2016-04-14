@@ -48,7 +48,6 @@ public class Student {
 
     @Expose @SerializedName("image")
     private String image;
-
     public String getName() {
         return name;
     }
@@ -96,7 +95,6 @@ public class Student {
     public String getImage() {
         return image;
     }
-
     public static Student[] fromJson(String json){
         return new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
                 .create().fromJson(json,  Student[].class);

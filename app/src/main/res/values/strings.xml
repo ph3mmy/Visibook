@@ -148,4 +148,6 @@
     <string name="log_out">Log Out</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="change_image_text">Change Image</string>
+    <string name="uploaded">Picture Uploaded</string>
+    <string name="member">Member</string>
 </resources>

@@ -5,10 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jcedar.visibook.lautech.R;
+import com.jcedar.visibook.lautech.helper.AppSettings;
 import com.jcedar.visibook.lautech.helper.FormatUtils;
-import com.jcedar.visibook.lautech.helper.PrefUtils;
 import com.jcedar.visibook.lautech.provider.DataContract;
 
 /**
@@ -36,9 +35,15 @@ public class StudentCursorAdapter extends CursorAdapter {
     private boolean delayEnterAnimation = true;
 
     private int mLayoutResource;
+    private String userId;
+    boolean hasImage;
+
+    Context context;
+
     public StudentCursorAdapter(Context context, Cursor c, int layoutResource) {
         super(context, c, 0);
         mLayoutResource = layoutResource;
+        this.context = context;
     }
 
     @Override
@@ -51,6 +56,11 @@ public class StudentCursorAdapter extends CursorAdapter {
         int position = cursor.getPosition();
         runEnterAnimation(view, position);
 
+
+
+
+        userId = cursor.getString(
+                cursor.getColumnIndex(DataContract.Students._ID));
 
         TextView title = (TextView) view.findViewById(R.id.lblName);
         title.setTypeface(null, Typeface.BOLD);
@@ -71,27 +81,42 @@ public class StudentCursorAdapter extends CursorAdapter {
         unit.setTypeface(null, Typeface.BOLD);
         String puc = cursor.getString(
                 cursor.getColumnIndex(DataContract.Students.COURSE));
-       unit.setText("Course: "+puc);
-
-        final ImageView imageView = (ImageView) view.findViewById(R.id.user_image);
-        String imageBas64 = cursor.getString(
+       unit.setText("Course: " + puc);
+        String imagePresent = cursor.getString(
                 cursor.getColumnIndex(DataContract.Students.IMAGE));
-        if( imageBas64 != null ) {
-            final Bitmap bitmap = PrefUtils.decodeBase64(imageBas64);
-             new Handler().post(new Runnable() {
-                 @Override
-                 public void run() {
-                    imageView.setImageBitmap(bitmap);
-                 }
-             });
-        }
-//
-//        TextView sortCode = (TextView)view.findViewById(R.id.sort_code);
-//        sortCode.setText(cursor.getString(
-//                cursor.getColumnIndex(DataContract.Account.SORT_CODE)));
+        Log.e(TAG, "image from cursor ==" + imagePresent);
+
+        final ImageView myImageView  = (ImageView) view.findViewById(R.id.user_image);
+
+
 
     }
 
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final ImageView myImageView;
+
+        if( convertView == null ) {
+            myImageView = (ImageView) parent.findViewById(R.id.user_image);
+            //myImageView = (ImageView) convertView.findViewById(R.id.user_image);
+        } else {
+            myImageView = (ImageView) convertView;
+        }
+        if ( hasImage ){
+            String url = String.format(AppSettings.SERVER_IMAGE_URL+"%s.png", userId);
+            Log.e(TAG, "image url == 2 " + url);
+
+            /*Glide.with(context)
+                    .load(url)
+                    .centerCrop()
+                    .placeholder(R.mipmap.ic_user)
+                    .crossFade()
+                    .into(myImageView);*/
+        }
+
+        return myImageView;
+    }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void runEnterAnimation(View view, int position) {
