@@ -2,6 +2,7 @@
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,12 +15,15 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:padding="3dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="100">
 
-        <ImageView
+
+       <ImageView
             android:id="@+id/user_image"
-            android:src="@mipmap/ic_user"
-            android:layout_width="wrap_content"
+           android:src="@mipmap/ic_user"
+           android:layout_weight="22"
+            android:layout_width="0dp"
             android:layout_height="match_parent" />
 
 
@@ -27,8 +31,7 @@
             android:padding="5dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="3dp"
-            android:layout_weight="5">
+            android:layout_weight="78">
 
 
             <TextView
