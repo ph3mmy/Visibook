@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -51,7 +52,7 @@ public class AllStudentsDetailsFragment extends Fragment
     private ImageView imgSendEmail;
     private ImageView imgSendSms;
     private ImageView imgCall, imageView;
-
+    private boolean imageLoaded = false;
 
 
     public AllStudentsDetailsFragment() {
@@ -142,6 +143,22 @@ public class AllStudentsDetailsFragment extends Fragment
         dateOfBirth = (TextView) rootView.findViewById(R.id.tvDateOfBirth);
         description = (TextView) rootView.findViewById(R.id.tvDescription);
 
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if( imageLoaded ) {
+                    String id = dataUri.getLastPathSegment();
+                    Log.e(TAG, "id == "+id);
+
+                    DetailPicViewFragment fragment = DetailPicViewFragment.newInstance(id);
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    fm.beginTransaction()
+                            .replace(R.id.details_layout, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            }
+        });
         return rootView;
     }
 
@@ -225,6 +242,8 @@ public class AllStudentsDetailsFragment extends Fragment
                         .placeholder(R.drawable.person_image_empty)
                         .crossFade()
                         .into(imageView);
+
+                imageLoaded = true;
             }
             data.close();
         }
