@@ -14,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.jcedar.visibook.lautech.R;
+import com.jcedar.visibook.lautech.adapter.TextWriter;
 import com.jcedar.visibook.lautech.gcm.GcmIntentServices;
 import com.jcedar.visibook.lautech.helper.AccountUtils;
 import com.jcedar.visibook.lautech.helper.PrefUtils;
@@ -51,9 +53,15 @@ public class NewDashBoardActivity extends AppCompatActivity implements
     private Set<Fragment> mHomeFragments = new HashSet<>();
     private ActionBarDrawerToggle drawerToggle;
 
+    private boolean isHome = false;
+
+    TextWriter textWriter;
+
+    private SearchView searchView;
     public static Toolbar getToolbar() {
         return toolbar;
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +83,6 @@ public class NewDashBoardActivity extends AppCompatActivity implements
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-
         //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         View headerView = navigationView.inflateHeaderView(R.layout.drawer_header);
@@ -94,6 +101,8 @@ public class NewDashBoardActivity extends AppCompatActivity implements
         TextView username = (TextView) headerView.findViewById(R.id.username);
         TextView email = (TextView) headerView.findViewById(R.id.email);
         TextView roleString = (TextView) headerView.findViewById(R.id.roleString);
+
+        textWriter = (TextWriter) headerView.findViewById(R.id.textTitle);
 
         //set drawer Item
         //String photoString = PrefUtils.getPhoto(this);
@@ -118,7 +127,7 @@ public class NewDashBoardActivity extends AppCompatActivity implements
         roleString.setText(R.string.member);
         roleString.setTextColor(getResources().getColor(R.color.white));
 
-        AllStudentListFragment aslt;
+        final AllStudentListFragment aslt;
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
 
@@ -131,7 +140,10 @@ public class NewDashBoardActivity extends AppCompatActivity implements
             aslt = new AllStudentListFragment();
         }
 
-        ft.add(R.id.frame, aslt);
+        //textWriter.setCharacterDelay(100);
+        //textWriter.animateText("Lautech");
+
+        ft.replace(R.id.frame, aslt, "HOME");
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.addToBackStack(null);
         ft.commit();
@@ -200,6 +212,10 @@ public class NewDashBoardActivity extends AppCompatActivity implements
                 }
 
                 FragmentManager fm = getSupportFragmentManager();
+                if( getSupportFragmentManager().findFragmentByTag("HOME") != null
+                        || getSupportFragmentManager().findFragmentByTag("HOME").isVisible()){
+                    fm.beginTransaction().remove(aslt).commit();
+                }
                 fm.beginTransaction().replace(R.id.frame, fragment).commit();
 
                 return true;
@@ -259,6 +275,8 @@ public class NewDashBoardActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
@@ -282,23 +300,15 @@ public class NewDashBoardActivity extends AppCompatActivity implements
         mHomeFragments.add(fragment);
     }
 
-/*    @Override
-    protected void onPause() {
-
-        super.onPause();
-
-        getSupportFragmentManager().findFragmentByTag("MyFragment")
-                .setRetainInstance(true);
-    }
-
     @Override
-    protected void onResume() {
+    public void onBackPressed() {
+        super.onBackPressed();
 
-        super.onResume();
+        if( getSupportFragmentManager().findFragmentByTag("HOME") != null
+                || getSupportFragmentManager().findFragmentByTag("HOME").isVisible()){
+           isHome = true;
 
-        getSupportFragmentManager().findFragmentByTag("MyFragment")
-                .getRetainInstance();
-
-    }*/
-
+           // finish();
+        }
+    }
 }

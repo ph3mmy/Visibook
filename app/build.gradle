@@ -43,7 +43,9 @@ dependencies {
     compile 'com.android.support:support-v4:23.2.0'
     compile 'com.gordonwong:material-sheet-fab:1.2.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'de.hdodenhof:circleimageview:2.0.0'
+
+    //testing framework
+    testCompile "org.robolectric:robolectric:3.0"
     //    compile 'com.google.android.gms:play-services-auth:8.4.0'
 }
 

@@ -15,7 +15,6 @@ import com.jcedar.visibook.lautech.helper.AccountUtils;
 import com.jcedar.visibook.lautech.helper.AppSettings;
 import com.jcedar.visibook.lautech.ui.MainActivity;
 
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -81,7 +80,7 @@ public class RegisterApp extends AsyncTask<Void, Void, String> {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(AccountUtils.PROPERTY_REG_ID, regid);
         editor.putInt(AccountUtils.PROPERTY_APP_VERSION, appVersion);
-        editor.commit();
+        editor.apply();
 
     }
 
@@ -104,8 +103,6 @@ public class RegisterApp extends AsyncTask<Void, Void, String> {
         request.setURI(url);
         try {
             httpclient.execute(request);
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

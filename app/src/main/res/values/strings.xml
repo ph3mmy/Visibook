@@ -68,7 +68,7 @@
     <string name="title_activity_account">Sign In</string>
     <string name="empty_accounts">No EBIPS accounts are available. Add an account to continue.</string>
     <string name="auth_name">POWER</string>
-    <string name="str_search_hint">Search</string>
+    <string name="str_search_hint">Search name</string>
     <string name="retry">Retry</string>
     <string name="taking_a_while">taking_a_while</string>
     <string name="role_MO">MO</string>

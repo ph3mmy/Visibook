@@ -154,14 +154,35 @@ public class GcmIntentServices extends IntentService {
                     case 201:
                         Log.e(TAG, "a name updated");
                         String updateId = extras.getString("updatedId");
-                        long id = Long.parseLong(updateId);
-                        syncSummary = mSyncHelper.performUpdateStudentSync(id);
+                        long id = 0;
+                        if (updateId != null) {
+                            id = Long.parseLong(updateId);
+                            syncSummary = mSyncHelper.performUpdateStudentSync(id);
 
-                        int updateStudentNo = syncSummary.getInt( SyncHelper.UPDATE_COUNT, 0);
-                        Log.e(TAG, "a name updated "+updateStudentNo);
+                            int updateStudentNo = syncSummary.getInt( SyncHelper.UPDATE_COUNT, 0);
+                            Log.e(TAG, "a name updated "+updateStudentNo);
 
-                        if ( updateStudentNo != 0 && PrefUtils.hasNotification(this)) {
-                            displayNotification(this, message, update, updateStudentNo,"Student Info Updated");
+                            if ( updateStudentNo != 0 && PrefUtils.hasNotification(this)) {
+                                displayNotification(this, message, update, updateStudentNo,"Student Info Updated");
+                            }
+                        }
+
+                        break;
+                    case 202:
+                        Log.e(TAG, "a name updated");
+                        String updateId2 = extras.getString("updatedId");
+                        long id2;
+                        if (updateId2 != null) {
+                            id2 = Long.parseLong(updateId2);
+
+                            syncSummary = mSyncHelper.performUpdateStudentSync(id2);
+
+                            int updateStudentNo2 = syncSummary.getInt( SyncHelper.UPDATE_COUNT, 0);
+                            Log.e(TAG, "an image updated "+updateStudentNo2);
+
+                            /**
+                             * Don't notify in the case of an image update
+                             */
                         }
 
                         break;
@@ -214,7 +235,7 @@ public class GcmIntentServices extends IntentService {
         NotificationManager mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, DashboardActivity.class),
+                new Intent(this, NewDashBoardActivity.class),
                 0);
 
 
