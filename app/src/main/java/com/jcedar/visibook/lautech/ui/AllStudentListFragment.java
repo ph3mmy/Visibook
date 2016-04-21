@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -22,21 +23,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jcedar.visibook.lautech.R;
 import com.jcedar.visibook.lautech.adapter.RecyclerCursorAdapterAll;
-import com.jcedar.visibook.lautech.io.adapters.StudentCursorAdapter;
 import com.jcedar.visibook.lautech.provider.AndroidDatabaseManager;
 import com.jcedar.visibook.lautech.provider.DataContract;
-import com.jcedar.visibook.lautech.ui.view.SimpleSectionedListAdapter;
 
 import java.util.Arrays;
-
-import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 
 import static com.jcedar.visibook.lautech.ui.NewDashBoardActivity.getToolbar;
 
@@ -55,10 +49,6 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     // TODO: Rename and change types of parameters
     private int mPosition;
     private String mParam2;
-
-    private StudentCursorAdapter mAdapter;
-    private SimpleSectionedListAdapter sSectionAdapter;
-    private ListView listView;
     private TextView tvError;
     private Bundle mHomeBundle = Bundle.EMPTY;
     private String _POSITION = "position";
@@ -126,15 +116,8 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
         }
 
 
-        mAdapter = new StudentCursorAdapter(getActivity(), null,
-                R.layout.list_n_item_student);
-
-        sSectionAdapter = new SimpleSectionedListAdapter(getActivity(),
-                R.layout.list_group_header, mAdapter);
         context = getActivity().getClass().getSimpleName();
 
-        // setListAdapter(mAdapter);
-        /*setListAdapter(sSectionAdapter);*/
         setRetainInstance(true);
         setHasOptionsMenu(true);
     }
@@ -150,7 +133,7 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        /*super.onCreateView(inflater, container, savedInstanceState);*/
+
 
         if( rootView != null ){
             if(  rootView.getParent() != null ){
@@ -165,6 +148,9 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
             return rootView;
         }
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        tvError = (TextView) rootView.findViewById(R.id.tvErrorMag);
+
+
         if(getToolbar() != null)
             getToolbar().setVisibility(View.VISIBLE);
         recyclerView = (RecyclerView) rootView.findViewById( R.id.recyclerview );
@@ -175,14 +161,13 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setHasFixedSize(false);
 
-        AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(resultsCursorAdapter);
-        alphaAdapter.setDuration(1000);
-        alphaAdapter.setInterpolator(new OvershootInterpolator());
-        //recyclerView.setAdapter( alphaAdapter );
-        recyclerView.setAdapter( new ScaleInAnimationAdapter( resultsCursorAdapter ));
-        //recyclerView.setAdapter(resultsCursorAdapter);
+        recyclerView.setAdapter(resultsCursorAdapter);
 
-        tvError = (TextView) rootView.findViewById(R.id.tvErrorMag);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        itemAnimator.setAddDuration(1000);
+        itemAnimator.setRemoveDuration(1000);
+        recyclerView.setItemAnimator(itemAnimator);
+
 
         new Handler().post(new Runnable() {
             @Override
@@ -385,10 +370,12 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
 
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-        if(data.moveToFirst()) {
-            resultsCursorAdapter.swapCursor(data);
+
+        if(cursor.moveToFirst()) {
+            resultsCursorAdapter.swapCursor(cursor);
+
         }
 
 
@@ -396,7 +383,7 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        resultsCursorAdapter.swapCursor(null);
+        //resultsCursorAdapter.swapCursor(null);
     }
 
 

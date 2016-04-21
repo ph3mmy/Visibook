@@ -143,10 +143,9 @@ public class NewDashBoardActivity extends AppCompatActivity implements
         //textWriter.setCharacterDelay(100);
         //textWriter.animateText("Lautech");
 
-        ft.replace(R.id.frame, aslt, "HOME");
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.addToBackStack(null);
-        ft.commit();
+        ft.replace(R.id.frame, aslt, "HOME")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
 
 
         navigationView.getMenu().getItem(0).setChecked(true);
@@ -212,8 +211,8 @@ public class NewDashBoardActivity extends AppCompatActivity implements
                 }
 
                 FragmentManager fm = getSupportFragmentManager();
-                if( getSupportFragmentManager().findFragmentByTag("HOME") != null
-                        || getSupportFragmentManager().findFragmentByTag("HOME").isVisible()){
+                if( getSupportFragmentManager().findFragmentByTag("HOME") != null){
+                        //|| getSupportFragmentManager().findFragmentByTag("HOME").isVisible()){
                     fm.beginTransaction().remove(aslt).commit();
                 }
                 fm.beginTransaction().replace(R.id.frame, fragment).commit();
