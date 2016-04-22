@@ -1,30 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:background="@color/half_black"
-    android:layout_gravity="center_vertical"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
     android:gravity="center_horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/chooseCamera"
-        android:src="@android:drawable/ic_menu_camera"
-        android:padding="20dp"
+    <LinearLayout
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/chooseFile"
-        android:src="@android:drawable/ic_menu_gallery"
-        android:padding="20dp"
+        <android.support.v7.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card="http://schemas.android.com/apk/res-auto"
+            android:layout_height="wrap_content"
+            android:layout_width="90dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            card:cardElevation="1dp"
+            card:cardBackgroundColor="@color/theme_accent_1">
+
+
+            <RelativeLayout
+
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/chooseCamera"
+                android:src="@android:drawable/ic_menu_camera"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+            <TextView
+                android:layout_below="@id/chooseCamera"
+                android:id="@+id/tv_camera"
+                style="?android:textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="Camera"
+                android:textColor="@color/white_text"
+                android:background="@android:color/transparent"/>
+            </RelativeLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="8dp"
+                android:layout_gravity="bottom"
+                android:background="@color/black_innertransparent"
+                />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <ImageView
-        android:id="@+id/chooseFacebook"
-        android:src="@drawable/com_facebook_button_icon"
-        android:padding="20dp"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card="http://schemas.android.com/apk/res-auto"
+            android:layout_height="wrap_content"
+            android:layout_width="90dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            card:cardElevation="1dp"
+            card:cardBackgroundColor="@color/theme_accent_1">
+
+
+            <RelativeLayout
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/chooseFile"
+                    android:src="@android:drawable/ic_menu_gallery"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+                <TextView
+                    android:layout_below="@id/chooseFile"
+                    android:id="@+id/tv_gallery"
+                    style="?android:textAppearanceMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="Gallery"
+                    android:textColor="@color/white_text"
+                    android:background="@android:color/transparent"/>
+            </RelativeLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="8dp"
+                android:layout_gravity="bottom"
+                android:background="@color/black_innertransparent"
+                />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card="http://schemas.android.com/apk/res-auto"
+            android:layout_height="wrap_content"
+            android:layout_width="90dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            card:cardElevation="1dp"
+            card:cardBackgroundColor="@color/theme_accent_1">
+
+
+            <RelativeLayout
+                android:padding="10dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/chooseFacebook"
+                    android:src="@drawable/com_facebook_button_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="25dp" />
+                <TextView
+                    android:layout_below="@id/chooseFacebook"
+                    android:id="@+id/tv_facebook"
+                    style="?android:textAppearanceMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="Facebook"
+                    android:textColor="@color/white_text"
+                    android:background="@android:color/transparent"/>
+            </RelativeLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="8dp"
+                android:layout_gravity="bottom"
+                android:background="@color/black_innertransparent"
+                />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
 
 </LinearLayout>
+

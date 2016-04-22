@@ -104,4 +104,6 @@
     <color name="blue_semi_transparent">#805677fc</color>
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
     <color name="fragment_black">#1c1c1c</color>
+    <color name="white_text">#ffffff</color>
+    <color name="black_innertransparent">#1A000000</color>
 </resources>
