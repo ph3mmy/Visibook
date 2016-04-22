@@ -11,8 +11,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,15 +23,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jcedar.visibook.lautech.R;
 import com.jcedar.visibook.lautech.adapter.RecyclerCursorAdapterAll;
-import com.jcedar.visibook.lautech.io.adapters.StudentCursorAdapter;
 import com.jcedar.visibook.lautech.provider.AndroidDatabaseManager;
 import com.jcedar.visibook.lautech.provider.DataContract;
-import com.jcedar.visibook.lautech.ui.view.SimpleSectionedListAdapter;
 
 import java.util.Arrays;
 
@@ -44,14 +44,11 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_IDS = "ids";
+    private static final String SEARCH_KEY = "SEARCH_KEY";
 
     // TODO: Rename and change types of parameters
     private int mPosition;
     private String mParam2;
-
-    private StudentCursorAdapter mAdapter;
-    private SimpleSectionedListAdapter sSectionAdapter;
-    private ListView listView;
     private TextView tvError;
     private Bundle mHomeBundle = Bundle.EMPTY;
     private String _POSITION = "position";
@@ -66,6 +63,7 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
 
     private static final int NORMAL_LOADER_ID = 1;
     private static final int BIRTHDAY_LOADER_ID = 2;
+    private static final int SEARCH_LOADER_ID = 3;
 
     static int presentId;
 
@@ -118,15 +116,8 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
         }
 
 
-        mAdapter = new StudentCursorAdapter(getActivity(), null,
-                R.layout.list_n_item_student);
-
-        sSectionAdapter = new SimpleSectionedListAdapter(getActivity(),
-                R.layout.list_group_header, mAdapter);
         context = getActivity().getClass().getSimpleName();
 
-        // setListAdapter(mAdapter);
-        /*setListAdapter(sSectionAdapter);*/
         setRetainInstance(true);
         setHasOptionsMenu(true);
     }
@@ -142,7 +133,7 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        /*super.onCreateView(inflater, container, savedInstanceState);*/
+
 
         if( rootView != null ){
             if(  rootView.getParent() != null ){
@@ -157,6 +148,9 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
             return rootView;
         }
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        tvError = (TextView) rootView.findViewById(R.id.tvErrorMag);
+
+
         if(getToolbar() != null)
             getToolbar().setVisibility(View.VISIBLE);
         recyclerView = (RecyclerView) rootView.findViewById( R.id.recyclerview );
@@ -166,8 +160,14 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
         //recyclerView.setLayoutManager(new WrappingLinearLayoutManager(getContext()));
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setHasFixedSize(false);
+
         recyclerView.setAdapter(resultsCursorAdapter);
-        tvError = (TextView) rootView.findViewById(R.id.tvErrorMag);
+
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        itemAnimator.setAddDuration(1000);
+        itemAnimator.setRemoveDuration(1000);
+        recyclerView.setItemAnimator(itemAnimator);
+
 
         new Handler().post(new Runnable() {
             @Override
@@ -201,12 +201,8 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
         super.onOptionsMenuClosed(menu);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_all_student_list, menu);
 
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -258,7 +254,39 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
         }
     };
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_all_student_list, menu);
 
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!TextUtils.isEmpty(query)) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SEARCH_KEY, query);
+
+                    getLoaderManager().restartLoader(SEARCH_LOADER_ID,
+                            bundle, AllStudentListFragment.this);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!TextUtils.isEmpty(newText)) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SEARCH_KEY, newText);
+
+                    getLoaderManager().restartLoader(SEARCH_LOADER_ID,
+                            bundle, AllStudentListFragment.this);
+                }
+                return false;
+            }
+        });
+    }
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri uri = DataContract.Students.CONTENT_URI;
@@ -283,7 +311,6 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
 
                 selection = selection.substring(0, selection.length() - 2) + ")";
 
-                Log.e(TAG, "sec "+selection);
 
                 CursorLoader cursor = new CursorLoader(
                         getActivity(),
@@ -299,6 +326,33 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
                 Log.e(TAG, "query =="+Arrays.toString(cursor.getSelectionArgs()));
                 return cursor;
             }
+
+            case SEARCH_LOADER_ID: {
+                presentId = SEARCH_LOADER_ID;
+
+                if (args != null) {
+                    String query = args.getString(SEARCH_KEY);
+
+                    String selection1 = DataContract.Students.NAME + " LIKE '%" +query + "%'";
+
+                    return new CursorLoader(
+                            getActivity(),
+                            uri,
+                            DataContract.Students.PROJECTION_ALL,
+                            selection1,    // selection
+                            null,           // arguments
+                            DataContract.Students.NAME + " ASC");
+
+                    } else {
+                    return new CursorLoader(
+                            getActivity(),
+                            uri,
+                            DataContract.Students.PROJECTION_ALL,
+                            null,    // selection
+                            null,           // arguments
+                            DataContract.Students.NAME + " ASC");
+                    }
+                }
 
             default:{
                 presentId = NORMAL_LOADER_ID;
@@ -316,24 +370,24 @@ public class AllStudentListFragment extends Fragment implements LoaderManager.Lo
 
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-        if(data.moveToFirst()) {
-            resultsCursorAdapter.swapCursor(data);
+
+        if(cursor.moveToFirst()) {
+            resultsCursorAdapter.swapCursor(cursor);
+
         }
 
-        //data.close();
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        resultsCursorAdapter.swapCursor(null);
+        //resultsCursorAdapter.swapCursor(null);
     }
 
 
     private void updateDashboard() {
-        // do work
         try {
             getLoaderManager().restartLoader(presentId, null, this);
         } catch (Exception e) {
